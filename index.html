@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>GGiraq 🌿</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+:root {
+  --green:     #2E7D32;
+  --green-l:   #E8F5E9;
+  --green-m:   #A5D6A7;
+  --amber:     #E65100;
+  --amber-l:   #FFF3E0;
+  --red:       #C62828;
+  --red-l:     #FFEBEE;
+  --blue:      #1565C0;
+  --blue-l:    #E3F2FD;
+  --surface:   #FFFFFF;
+  --surface1:  #F7F9F7;
+  --surface2:  #EEF3EE;
+  --border:    #D6E4D6;
+  --text:      #1B2E1B;
+  --text2:     #4A6741;
+  --text3:     #7A9477;
+  --radius:    12px;
+  --shadow:    0 2px 12px rgba(46,125,50,0.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: var(--surface1); font-family: 'Segoe UI', system-ui, sans-serif; color: var(--text); overscroll-behavior: none; }
+
+/* ── APP SHELL ── */
+#app { display: flex; flex-direction: column; height: 100dvh; max-width: 430px; margin: 0 auto; background: var(--surface); box-shadow: 0 0 40px rgba(0,0,0,.10); position: relative; overflow: hidden; }
+
+/* ── TOP BAR ── */
+.topbar { background: var(--green); color: #fff; padding: 14px 16px 10px; flex-shrink: 0; }
+.topbar-row { display: flex; align-items: center; justify-content: space-between; }
+.app-logo { font-size: 20px; font-weight: 700; letter-spacing: -.5px; display: flex; align-items: center; gap: 6px; }
+.app-logo span { font-size: 13px; font-weight: 400; opacity: .8; }
+.topbar-actions { display: flex; gap: 8px; }
+.icon-btn { background: rgba(255,255,255,.15); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; font-size: 18px; position: relative; }
+.notif-dot { position: absolute; top: 5px; right: 5px; width: 9px; height: 9px; background: #FF5722; border-radius: 50%; border: 2px solid var(--green); }
+
+/* ── NET BAR ── */
+.netbar { display: flex; align-items: center; gap: 8px; padding: 6px 14px; font-size: 12px; flex-shrink: 0; transition: background .3s; }
+.netbar.offline { background: #FFF8E1; color: #E65100; border-bottom: 1px solid #FFE082; }
+.netbar.online  { background: var(--green-l); color: var(--green); border-bottom: 1px solid var(--green-m); }
+.net-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.net-dot.off { background: #FF9800; }
+.net-dot.on  { background: #4CAF50; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+.net-toggle { margin-right: auto; padding: 2px 10px; border-radius: 20px; border: 1px solid currentColor; background: none; font-size: 11px; cursor: pointer; color: inherit; font-family: inherit; }
+
+/* ── NAV ── */
+.nav { display: flex; border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
+.nav-btn { flex: 1; padding: 8px 4px 10px; font-size: 11px; color: var(--text3); border: none; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: color .2s; position: relative; }
+.nav-btn i { font-size: 22px; }
+.nav-btn.active { color: var(--green); }
+.nav-btn.active::after { content:''; position: absolute; top: 0; left: 20%; right: 20%; height: 2px; background: var(--green); border-radius: 0 0 3px 3px; }
+.nav-badge { position: absolute; top: 6px; right: calc(50% - 18px); background: #F44336; color: #fff; border-radius: 10px; padding: 1px 5px; font-size: 9px; font-weight: 700; }
+
+/* ── CONTENT ── */
+.content { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+
+/* ── VIEWS ── */
+.view { display: none; min-height: 100%; }
+.view.active { display: block; }
+
+/* ════ MAP VIEW ════ */
+#view-map { display: none; flex-direction: column; min-height: 100%; }
+#view-map.active { display: flex; }
+.map-wrap { position: relative; background: #C8E6C9; flex-shrink: 0; height: 240px; overflow: hidden; }
+.map-svg { width: 100%; height: 100%; }
+.map-legend { display: flex; gap: 14px; flex-wrap: wrap; padding: 8px 14px; background: var(--surface); border-bottom: 1px solid var(--border); font-size: 11px; color: var(--text2); flex-shrink: 0; }
+.leg { display: flex; align-items: center; gap: 5px; }
+.leg-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+.plant-list { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+
+.pcard { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; cursor: pointer; transition: box-shadow .15s, border-color .15s; }
+.pcard:active { box-shadow: var(--shadow); }
+.pcard.urgent { border-color: #EF9A9A; }
+.pcard.soon   { border-color: #FFE082; }
+.pcard-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.pcard-emoji { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.pcard-info { flex: 1; min-width: 0; }
+.pcard-name { font-size: 15px; font-weight: 600; }
+.pcard-loc  { font-size: 12px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.badge { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 600; flex-shrink: 0; }
+.badge-ok     { background: var(--green-l); color: var(--green); }
+.badge-soon   { background: var(--amber-l); color: var(--amber); }
+.badge-urgent { background: var(--red-l);   color: var(--red); }
+.pcard-meta { font-size: 11px; color: var(--text3); }
+.pcard-footer { display: flex; justify-content: flex-end; margin-top: 6px; }
+.report-btn { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px; font-size: 11px; color: var(--text3); cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 4px; }
+.report-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* ════ ADD VIEW ════ */
+.form-view { padding: 16px; }
+.form-title { font-size: 17px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.fg { margin-bottom: 14px; }
+.fg label { font-size: 13px; color: var(--text2); display: block; margin-bottom: 5px; font-weight: 500; }
+.fg input, .fg select, .fg textarea {
+  width: 100%; padding: 11px 13px; border: 1px solid var(--border); border-radius: 9px;
+  font-size: 14px; background: var(--surface1); color: var(--text); font-family: inherit;
+  transition: border-color .15s; appearance: none;
+}
+.fg input:focus, .fg select:focus { outline: none; border-color: var(--green); background: var(--surface); }
+.fg textarea { resize: none; height: 70px; }
+.interval-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.int-btn { padding: 9px 4px; border: 1px solid var(--border); border-radius: 9px; font-size: 12px; cursor: pointer; background: var(--surface1); color: var(--text2); text-align: center; transition: all .15s; font-family: inherit; }
+.int-btn.sel { background: var(--green-l); border-color: var(--green); color: var(--green); font-weight: 600; }
+.loc-btn { width: 100%; padding: 12px; border: 1.5px dashed var(--green); border-radius: 9px; background: var(--green-l); color: var(--green); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; font-weight: 500; }
+.submit-btn { width: 100%; padding: 14px; background: var(--green); color: #fff; border: none; border-radius: 11px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 6px; font-family: inherit; transition: opacity .15s; }
+.submit-btn:active { opacity: .85; }
+
+/* ════ NOTIFICATIONS VIEW ════ */
+.notif-view { padding: 14px; }
+.section-lbl { font-size: 12px; color: var(--text3); margin-bottom: 10px; font-weight: 500; letter-spacing: .3px; }
+.ncard { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 13px; margin-bottom: 10px; }
+.ncard.urgent { border-color: #FFCC80; background: #FFFDE7; }
+.ncard-top { display: flex; gap: 10px; align-items: flex-start; }
+.ncard-emoji { font-size: 30px; flex-shrink: 0; }
+.ncard-body .nt { font-size: 14px; font-weight: 600; }
+.ncard-body .nd { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.ncard-body .nm { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.ncard-actions { display: flex; gap: 8px; margin-top: 11px; }
+.accept-btn { flex: 1; padding: 9px; background: var(--green); color: #fff; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; font-family: inherit; font-weight: 600; }
+.skip-btn { padding: 9px 14px; background: none; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--text3); cursor: pointer; font-family: inherit; }
+.success-note { background: var(--green-l); border: 1px solid var(--green-m); border-radius: var(--radius); padding: 11px 13px; font-size: 13px; color: var(--green); display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+
+/* ════ QUEUE VIEW ════ */
+.queue-view { padding: 14px; }
+.queue-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.qbadge { background: #FF9800; color: #fff; border-radius: 20px; padding: 2px 9px; font-size: 11px; font-weight: 700; }
+.qbadge.done { background: var(--green); }
+.qcard { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 13px; margin-bottom: 10px; }
+.qcard.pending { border-color: #FFE082; }
+.qcard.synced  { border-color: var(--green-m); opacity: .8; }
+.qcard-top { display: flex; gap: 10px; align-items: center; }
+.qcard-em { font-size: 26px; }
+.qcard-info { flex: 1; }
+.qcard-name { font-size: 14px; font-weight: 600; }
+.qcard-meta { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.qstatus { font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 600; flex-shrink: 0; }
+.qstatus.pending { background: #FFF3E0; color: var(--amber); }
+.qstatus.done    { background: var(--green-l); color: var(--green); }
+.qdetails { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 5px; }
+.qrow { font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 6px; }
+.qrow i { font-size: 13px; color: var(--text3); }
+.prog-wrap { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 8px; display: none; }
+.prog-fill { height: 100%; background: var(--green); border-radius: 2px; width: 0; transition: width .12s linear; }
+.sync-btn { width: 100%; padding: 12px; background: var(--green); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 12px; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity .15s; }
+.sync-btn:disabled { background: var(--border); color: var(--text3); cursor: not-allowed; }
+.sync-hint { font-size: 11px; color: var(--text3); text-align: center; margin-top: 6px; }
+
+/* ════ PROFILE VIEW ════ */
+.profile-view { padding: 16px; }
+.profile-head { text-align: center; padding: 20px 0 16px; }
+.avatar { width: 74px; height: 74px; border-radius: 50%; background: var(--green); color: #fff; font-size: 28px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+.profile-name { font-size: 18px; font-weight: 700; }
+.profile-since { font-size: 12px; color: var(--text3); margin-top: 3px; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+.stat-card { background: var(--surface1); border: 1px solid var(--border); border-radius: 11px; padding: 13px 8px; text-align: center; }
+.stat-num { font-size: 26px; font-weight: 700; color: var(--green); }
+.stat-lbl { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.activity-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.act-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.act-item:last-child { border-bottom: none; }
+.act-icon { width: 34px; height: 34px; border-radius: 9px; background: var(--green-l); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+.act-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* ════ MODALS ════ */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.overlay.open { opacity: 1; pointer-events: all; }
+.mbox { background: var(--surface); border-radius: 20px 20px 0 0; padding: 20px 18px 28px; width: 100%; max-width: 430px; transform: translateY(100%); transition: transform .25s cubic-bezier(.4,0,.2,1); }
+.overlay.open .mbox { transform: translateY(0); }
+.mbox-close { float: left; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text3); line-height: 1; padding: 0; }
+.mbox-title { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+.mbox-sub { font-size: 13px; color: var(--text3); margin-bottom: 14px; }
+
+/* Steps indicator */
+.steps { display: flex; align-items: center; margin-bottom: 18px; }
+.stp { display: flex; flex-direction: column; align-items: center; flex: 1; font-size: 11px; color: var(--text3); gap: 4px; }
+.stp-circle { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--text3); transition: all .2s; }
+.stp.active .stp-circle { border-color: var(--green); color: var(--green); }
+.stp.done .stp-circle { background: var(--green); border-color: var(--green); color: #fff; }
+.stp-line { flex: 1; height: 1px; background: var(--border); margin: 0 4px; align-self: center; position: relative; top: -9px; }
+
+.step-panel { display: none; }
+.step-panel.active { display: block; }
+
+/* Photo */
+.photo-area { border: 2px dashed var(--green); border-radius: 12px; padding: 30px; text-align: center; cursor: pointer; color: var(--green); margin-bottom: 12px; transition: background .15s; }
+.photo-area:active { background: var(--green-l); }
+.photo-area i { font-size: 36px; display: block; margin-bottom: 6px; }
+.photo-area p { font-size: 13px; }
+.photo-preview { text-align: center; padding: 16px; font-size: 48px; }
+
+.check-row { display: flex; align-items: flex-start; gap: 9px; padding: 9px 11px; border-radius: 9px; font-size: 13px; margin-bottom: 8px; line-height: 1.4; }
+.check-row i { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.ch-save { background: var(--blue-l); color: var(--blue); }
+.ch-ok   { background: var(--green-l); color: var(--green); }
+.ch-wait { background: var(--surface1); color: var(--text2); border: 1px solid var(--border); }
+
+.act-btn { width: 100%; padding: 13px; border: none; border-radius: 11px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: opacity .15s; margin-top: 4px; }
+.act-btn:active { opacity: .85; }
+.btn-green { background: var(--green); color: #fff; }
+.btn-blue  { background: var(--blue); color: #fff; }
+.btn-red   { background: var(--red); color: #fff; }
+
+/* Report */
+.report-option { display: flex; align-items: center; gap: 10px; padding: 11px 13px; border: 1px solid var(--border); border-radius: 9px; margin-bottom: 8px; cursor: pointer; font-size: 13px; color: var(--text); transition: border-color .15s; }
+.report-option:has(input:checked) { border-color: var(--red); background: var(--red-l); color: var(--red); }
+.report-option input { accent-color: var(--red); }
+
+/* Plant detail */
+.detail-header { text-align: center; padding: 10px 0 16px; }
+.detail-emoji { font-size: 52px; margin-bottom: 8px; }
+.detail-name { font-size: 19px; font-weight: 700; }
+.detail-type { font-size: 13px; color: var(--text3); margin-top: 2px; }
+.detail-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text2); }
+.detail-row:last-child { border-bottom: none; }
+.detail-row i { font-size: 17px; color: var(--text3); width: 20px; text-align: center; }
+.detail-actions { display: flex; gap: 8px; margin-top: 14px; }
+
+/* Success modal */
+.success-modal { text-align: center; padding: 10px 0 6px; }
+.success-emoji { font-size: 52px; margin-bottom: 10px; }
+.success-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.success-body  { font-size: 13px; color: var(--text3); margin-bottom: 18px; line-height: 1.5; }
+
+/* GPS loading */
+.gps-loading { text-align: center; padding: 16px 0; color: var(--text3); font-size: 13px; }
+.gps-loading i { font-size: 32px; display: block; margin-bottom: 6px; animation: spin 1.5s linear infinite; color: var(--green); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-row">
+      <div class="app-logo">🌿 GGiraq <span>اسقِ نبتة، اصنع فرقاً</span></div>
+      <div class="topbar-actions">
+        <button class="icon-btn" onclick="openNotif()" title="الإشعارات">
+          <i class="ti ti-bell"></i>
+          <span class="notif-dot" id="notif-dot"></span>
+        </button>
+        <button class="icon-btn" onclick="switchView('profile')" title="ملفي">
+          <i class="ti ti-user"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NET BAR -->
+  <div class="netbar offline" id="net-bar">
+    <span class="net-dot off" id="net-dot"></span>
+    <span id="net-txt">بدون إنترنت — السقي يُحفظ محلياً</span>
+    <button class="net-toggle" onclick="toggleNet()">محاكاة اتصال</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ── MAP VIEW ── -->
+    <div class="view active" id="view-map" style="display:flex;flex-direction:column;">
+      <div class="map-wrap">
+        <svg class="map-svg" viewBox="0 0 430 240" xmlns="http://www.w3.org/2000/svg">
+          <rect width="430" height="240" fill="#DCEDC8"/>
+          <!-- streets -->
+          <rect x="0" y="100" width="430" height="16" fill="#C5E1A5" opacity=".7"/>
+          <rect x="170" y="0" width="16" height="240" fill="#C5E1A5" opacity=".7"/>
+          <rect x="0" y="185" width="430" height="10" fill="#C5E1A5" opacity=".5"/>
+          <rect x="310" y="0" width="10" height="240" fill="#C5E1A5" opacity=".5"/>
+          <!-- blocks -->
+          <rect x="14" y="14" width="68" height="78" rx="5" fill="#A5D6A7" opacity=".65"/>
+          <rect x="96" y="14" width="60" height="78" rx="5" fill="#A5D6A7" opacity=".55"/>
+          <rect x="195" y="14" width="100" height="78" rx="5" fill="#A5D6A7" opacity=".65"/>
+          <rect x="330" y="14" width="86" height="78" rx="5" fill="#A5D6A7" opacity=".6"/>
+          <rect x="14" y="124" width="140" height="52" rx="5" fill="#A5D6A7" opacity=".55"/>
+          <rect x="195" y="124" width="100" height="52" rx="5" fill="#A5D6A7" opacity=".55"/>
+          <rect x="330" y="124" width="86" height="52" rx="5" fill="#A5D6A7" opacity=".6"/>
+          <rect x="14" y="200" width="140" height="28" rx="5" fill="#A5D6A7" opacity=".45"/>
+          <rect x="195" y="200" width="100" height="28" rx="5" fill="#A5D6A7" opacity=".45"/>
+          <rect x="330" y="200" width="86" height="28" rx="5" fill="#A5D6A7" opacity=".5"/>
+          <!-- user -->
+          <circle cx="215" cy="108" r="16" fill="#1565C0" opacity=".15"/>
+          <circle cx="215" cy="108" r="9"  fill="#1565C0" opacity=".9"/>
+          <circle cx="215" cy="108" r="4"  fill="#fff"/>
+          <!-- range 300m -->
+          <circle cx="215" cy="108" r="62" fill="none" stroke="#1565C0" stroke-width="1" stroke-dasharray="5 5" opacity=".35"/>
+          <!-- markers: green -->
+          <g onclick="showDetail('ward')" style="cursor:pointer">
+            <circle cx="72" cy="150" r="15" fill="#2E7D32" opacity=".92"/>
+            <text x="72" y="156" text-anchor="middle" font-size="14">🌹</text>
+          </g>
+          <g onclick="showDetail('rehan')" style="cursor:pointer">
+            <circle cx="140" cy="215" r="15" fill="#2E7D32" opacity=".92"/>
+            <text x="140" y="221" text-anchor="middle" font-size="14">🌿</text>
+          </g>
+          <!-- marker: orange -->
+          <g onclick="showDetail('nakhlah')" style="cursor:pointer">
+            <circle cx="258" cy="150" r="15" fill="#E65100" opacity=".92"/>
+            <text x="258" y="156" text-anchor="middle" font-size="14">🌴</text>
+          </g>
+          <!-- marker: red -->
+          <g onclick="showDetail('zaytoon')" style="cursor:pointer">
+            <circle cx="370" cy="160" r="15" fill="#C62828" opacity=".92"/>
+            <text x="370" y="166" text-anchor="middle" font-size="14">🫒</text>
+          </g>
+        </svg>
+      </div>
+      <div class="map-legend">
+        <div class="leg"><div class="leg-dot" style="background:#2E7D32"></div>مسقية</div>
+        <div class="leg"><div class="leg-dot" style="background:#E65100"></div>تحتاج سقي</div>
+        <div class="leg"><div class="leg-dot" style="background:#C62828"></div>عاجل</div>
+        <div class="leg"><div class="leg-dot" style="background:#1565C0"></div>موقعك</div>
+      </div>
+      <div class="plant-list">
+
+        <div class="pcard" onclick="showDetail('ward')">
+          <div class="pcard-top">
+            <div class="pcard-emoji" style="background:#E8F5E9">🌹</div>
+            <div class="pcard-info">
+              <div class="pcard-name">وردة دمشقية</div>
+              <div class="pcard-loc"><i class="ti ti-map-pin" style="font-size:11px"></i> شارع المتنبي</div>
+            </div>
+            <span class="badge badge-ok"><i class="ti ti-check" style="font-size:11px"></i> مسقية</span>
+          </div>
+          <div class="pcard-meta">آخر سقي: منذ ساعتين · كل 6 ساعات</div>
+        </div>
+
+        <div class="pcard" onclick="showDetail('rehan')">
+          <div class="pcard-top">
+            <div class="pcard-emoji" style="background:#E8F5E9">🌿</div>
+            <div class="pcard-info">
+              <div class="pcard-name">ريحان</div>
+              <div class="pcard-loc"><i class="ti ti-map-pin" style="font-size:11px"></i> زقاق 14</div>
+            </div>
+            <span class="badge badge-ok"><i class="ti ti-check" style="font-size:11px"></i> مسقية</span>
+          </div>
+          <div class="pcard-meta">آخر سقي: منذ ساعة · كل 4 ساعات</div>
+        </div>
+
+        <div class="pcard soon" onclick="showDetail('nakhlah')">
+          <div class="pcard-top">
+            <div class="pcard-emoji" style="background:#FFF3E0">🌴</div>
+            <div class="pcard-info">
+              <div class="pcard-name">نخلة</div>
+              <div class="pcard-loc"><i class="ti ti-map-pin" style="font-size:11px"></i> حديقة الأمة</div>
+            </div>
+            <span class="badge badge-soon"><i class="ti ti-clock" style="font-size:11px"></i> قريباً</span>
+          </div>
+          <div class="pcard-meta">تحتاج سقي خلال ساعة · كل 12 ساعة</div>
+        </div>
+
+        <div class="pcard urgent" onclick="showDetail('zaytoon')">
+          <div class="pcard-top">
+            <div class="pcard-emoji" style="background:#FFEBEE">🫒</div>
+            <div class="pcard-info">
+              <div class="pcard-name">شجرة زيتون</div>
+              <div class="pcard-loc"><i class="ti ti-map-pin" style="font-size:11px"></i> ساحة النهر</div>
+            </div>
+            <span class="badge badge-urgent"><i class="ti ti-alert-triangle" style="font-size:11px"></i> عاجل</span>
+          </div>
+          <div class="pcard-meta">تأخر السقي 3 ساعات · كل 8 ساعات</div>
+          <div class="pcard-footer">
+            <button class="report-btn" onclick="event.stopPropagation();openReport('zaytoon')">
+              <i class="ti ti-flag" style="font-size:12px"></i> بلّغ
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── ADD VIEW ── -->
+    <div class="view" id="view-add">
+      <div class="form-view">
+        <div class="form-title"><i class="ti ti-plant-2" style="color:var(--green)"></i> نشر نبتة جديدة</div>
+
+        <div class="fg">
+          <label>اسم النبتة</label>
+          <input type="text" id="inp-name" placeholder="مثال: وردة، نخلة، ريحان...">
+        </div>
+        <div class="fg">
+          <label>نوع النبتة</label>
+          <select id="inp-type">
+            <option value="">اختر النوع...</option>
+            <option>زهور وورود</option>
+            <option>أشجار مثمرة</option>
+            <option>أشجار ظل</option>
+            <option>أعشاب طبية</option>
+            <option>صبار ونباتات صحراوية</option>
+            <option>نباتات مائية</option>
+            <option>خضروات</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>الموقع</label>
+          <button class="loc-btn" onclick="pickLocation()" id="loc-btn">
+            <i class="ti ti-map-pin"></i>
+            <span id="loc-txt">تحديد موقعي الحالي</span>
+          </button>
+        </div>
+        <div class="fg">
+          <label>ملاحظات (اختياري)</label>
+          <textarea id="inp-notes" placeholder="وصف مكان النبتة أو أي تعليمات للسقي..."></textarea>
+        </div>
+        <div class="fg">
+          <label>كل كم تحتاج سقياً؟</label>
+          <div class="interval-grid">
+            <button class="int-btn" onclick="selInt(this,'2h')">كل ساعتين</button>
+            <button class="int-btn" onclick="selInt(this,'4h')">كل 4 ساعات</button>
+            <button class="int-btn sel" onclick="selInt(this,'6h')">كل 6 ساعات</button>
+            <button class="int-btn" onclick="selInt(this,'8h')">كل 8 ساعات</button>
+            <button class="int-btn" onclick="selInt(this,'12h')">كل 12 ساعة</button>
+            <button class="int-btn" onclick="selInt(this,'24h')">كل يوم</button>
+          </div>
+        </div>
+        <button class="submit-btn" onclick="submitPlant()">نشر النبتة 🌱</button>
+      </div>
+    </div>
+
+    <!-- ── QUEUE VIEW ── -->
+    <div class="view" id="view-queue">
+      <div class="queue-view">
+        <div class="queue-title">
+          <i class="ti ti-cloud-upload" style="color:#E65100;font-size:20px"></i>
+          سجل السقي المحلي
+          <span class="qbadge" id="qbadge">1 معلّق</span>
+        </div>
+
+        <div class="qcard pending" id="qcard-1">
+          <div class="qcard-top">
+            <div class="qcard-em">🫒</div>
+            <div class="qcard-info">
+              <div class="qcard-name">شجرة زيتون — ساحة النهر</div>
+              <div class="qcard-meta">سُقيت 14:32 · محفوظة في الجهاز</div>
+            </div>
+            <span class="qstatus pending" id="qst-1">معلّق</span>
+          </div>
+          <div class="qdetails">
+            <div class="qrow"><i class="ti ti-camera"></i> صورة محفوظة (1.2 MB)</div>
+            <div class="qrow"><i class="ti ti-map-pin"></i> GPS: 33.3406°N, 44.4009°E</div>
+            <div class="qrow"><i class="ti ti-clock"></i> توقيت: 2026-07-11T14:32:07</div>
+            <div class="qrow"><i class="ti ti-fingerprint"></i> بصمة: a3f9c2d1...</div>
+          </div>
+          <div class="prog-wrap" id="prog-1"><div class="prog-fill" id="pfill-1"></div></div>
+        </div>
+
+        <div class="qcard synced" id="qcard-prev">
+          <div class="qcard-top">
+            <div class="qcard-em">🌹</div>
+            <div class="qcard-info">
+              <div class="qcard-name">وردة دمشقية — شارع المتنبي</div>
+              <div class="qcard-meta">سُقيت أمس · تم التحقق ✓</div>
+            </div>
+            <span class="qstatus done">تم الرفع</span>
+          </div>
+          <div class="qdetails">
+            <div class="qrow" style="color:var(--green)"><i class="ti ti-circle-check"></i> موقع مطابق — قُبلت السقية</div>
+          </div>
+        </div>
+
+        <button class="sync-btn" id="sync-btn" onclick="doSync()" disabled>
+          <i class="ti ti-cloud-upload"></i> رفع عند الاتصال (غير متصل)
+        </button>
+        <div class="sync-hint">يتم الرفع تلقائياً فور الاتصال بالإنترنت</div>
+
+        <div style="background:var(--surface1);border:1px solid var(--border);border-radius:var(--radius);padding:13px;margin-top:14px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px;color:var(--text2)">
+            <i class="ti ti-wifi-off" style="color:#E65100"></i> كيف يعمل بدون إنترنت؟
+          </div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+              <div style="font-size:12px;color:var(--text2)">تلتقط الصورة وتُحفظ فوراً في ذاكرة الجهاز</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+              <div style="font-size:12px;color:var(--text2)">GPS يُسجّل الإحداثيات محلياً — لا يحتاج إنترنت</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+              <div style="font-size:12px;color:var(--text2)">يُختم الملف بـ timestamp وبصمة رقمية لمنع التلاعب</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
+              <div style="font-size:12px;color:var(--text2)">فور الاتصال — يُرفع كل شيء تلقائياً ويتحقق الخادم من الموقع والصورة</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── PROFILE VIEW ── -->
+    <div class="view" id="view-profile">
+      <div class="profile-view">
+        <div class="profile-head">
+          <div class="avatar">م</div>
+          <div class="profile-name">محمد العراقي</div>
+          <div class="profile-since">عضو منذ يناير 2026 · بغداد</div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-num" id="stat-planted">12</div>
+            <div class="stat-lbl">نبتة نشرتها</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="stat-watered">47</div>
+            <div class="stat-lbl">مرة سقيت</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">🏆</div>
+            <div class="stat-lbl">ساقي نشيط</div>
+          </div>
+        </div>
+        <div class="activity-title">آخر النشاطات</div>
+        <div id="activity-list">
+          <div class="act-item">
+            <div class="act-icon">💧</div>
+            <div>
+              <div>سقيت شجرة زيتون</div>
+              <div class="act-sub">ساحة النهر · منذ يومين</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-icon">🌱</div>
+            <div>
+              <div>نشرت ريحانة</div>
+              <div class="act-sub">زقاق 14 · منذ 5 أيام</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-icon">💧</div>
+            <div>
+              <div>سقيت وردة دمشقية</div>
+              <div class="act-sub">شارع المتنبي · منذ أسبوع</div>
+            </div>
+          </div>
+          <div class="act-item">
+            <div class="act-icon">💧</div>
+            <div>
+              <div>سقيت نخلة</div>
+              <div class="act-sub">حديقة الأمة · منذ أسبوعين</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- NAV -->
+  <div class="nav">
+    <button class="nav-btn active" id="nb-map" onclick="switchView('map')">
+      <i class="ti ti-map-2"></i>الخريطة
+    </button>
+    <button class="nav-btn" id="nb-add" onclick="switchView('add')">
+      <i class="ti ti-plus"></i>نبتة جديدة
+    </button>
+    <button class="nav-btn" id="nb-queue" onclick="switchView('queue')">
+      <i class="ti ti-cloud-upload"></i>سجل السقي
+      <span class="nav-badge" id="nav-qbadge">1</span>
+    </button>
+    <button class="nav-btn" id="nb-profile" onclick="switchView('profile')">
+      <i class="ti ti-user"></i>ملفي
+    </button>
+  </div>
+
+</div><!-- /app -->
+
+
+<!-- ═══════════════ MODALS ═══════════════ -->
+
+<!-- NOTIFICATIONS -->
+<div class="overlay" id="ov-notif">
+  <div class="mbox">
+    <button class="mbox-close" onclick="closeOverlay('ov-notif')"><i class="ti ti-x"></i></button>
+    <div class="mbox-title">الإشعارات</div>
+    <div class="mbox-sub">نبتات قريبة تحتاج سقياً</div>
+
+    <div class="ncard urgent">
+      <div class="ncard-top">
+        <div class="ncard-emoji">🫒</div>
+        <div class="ncard-body">
+          <div class="nt">شجرة زيتون — عاجل!</div>
+          <div class="nd">ساحة النهر · تأخر 3 ساعات</div>
+          <div class="nm"><i class="ti ti-map-pin" style="font-size:11px"></i> 180 متر منك</div>
+        </div>
+      </div>
+      <div class="ncard-actions">
+        <button class="accept-btn" onclick="closeOverlay('ov-notif');openWater()">سأذهب لسقيها</button>
+        <button class="skip-btn">لا أستطيع</button>
+      </div>
+    </div>
+
+    <div class="ncard">
+      <div class="ncard-top">
+        <div class="ncard-emoji">🌴</div>
+        <div class="ncard-body">
+          <div class="nt">نخلة — تحتاج سقياً قريباً</div>
+          <div class="nd">حديقة الأمة · خلال ساعة</div>
+          <div class="nm"><i class="ti ti-map-pin" style="font-size:11px"></i> 240 متر منك</div>
+        </div>
+      </div>
+      <div class="ncard-actions">
+        <button class="accept-btn" onclick="closeOverlay('ov-notif');openWater()">سأذهب لسقيها</button>
+        <button class="skip-btn">لا أستطيع</button>
+      </div>
+    </div>
+
+    <div class="success-note">
+      <i class="ti ti-circle-check" style="font-size:18px;flex-shrink:0"></i>
+      <span><b>أحمد ك.</b> سقى وردة دمشقية — تم التحقق من موقعه ✓</span>
+    </div>
+  </div>
+</div>
+
+<!-- WATER (offline verify) -->
+<div class="overlay" id="ov-water">
+  <div class="mbox">
+    <button class="mbox-close" onclick="closeOverlay('ov-water');resetWater()"><i class="ti ti-x"></i></button>
+    <div class="mbox-title">تحقق من السقي</div>
+    <div class="mbox-sub" id="water-sub">يعمل بدون إنترنت — الحفظ محلي على الجهاز</div>
+
+    <div class="steps">
+      <div class="stp active" id="stp1"><div class="stp-circle">1</div>صورة</div>
+      <div class="stp-line"></div>
+      <div class="stp idle" id="stp2"><div class="stp-circle">2</div>موقع</div>
+      <div class="stp-line"></div>
+      <div class="stp idle" id="stp3"><div class="stp-circle">3</div>حفظ</div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="step-panel active" id="sp1">
+      <div class="photo-area" id="photo-area" onclick="takePhoto()">
+        <i class="ti ti-camera"></i>
+        <p>اضغط لالتقاط صورة للنبتة بعد السقي</p>
+      </div>
+      <div class="photo-preview hidden" id="photo-prev">📸</div>
+      <div class="check-row ch-save hidden" id="photo-saved">
+        <i class="ti ti-device-floppy"></i>
+        الصورة حُفظت في الجهاز (1.4 MB) — بدون إنترنت
+      </div>
+      <button class="act-btn btn-blue hidden" id="btn-next1" onclick="goStep(2)">
+        التالي — تسجيل الموقع <i class="ti ti-arrow-left"></i>
+      </button>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-panel" id="sp2">
+      <div class="gps-loading" id="gps-load">
+        <i class="ti ti-loader"></i>
+        جاري تحديد الموقع عبر GPS...
+      </div>
+      <div class="check-row ch-ok hidden" id="gps-ok">
+        <i class="ti ti-map-pin-check"></i>
+        GPS مُسجَّل: 33.3406°N, 44.4009°E — محفوظ في الجهاز
+      </div>
+      <div class="check-row ch-save hidden" id="gps-note">
+        <i class="ti ti-wifi-off"></i>
+        لا إنترنت مطلوب — الموقع محفوظ محلياً
+      </div>
+      <button class="act-btn btn-blue hidden" id="btn-next2" onclick="goStep(3)">
+        التالي — تأكيد الحفظ <i class="ti ti-arrow-left"></i>
+      </button>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-panel" id="sp3">
+      <div class="check-row ch-save">
+        <i class="ti ti-camera"></i>
+        صورة محفوظة: watering_20260711_1432.jpg
+      </div>
+      <div class="check-row ch-ok">
+        <i class="ti ti-map-pin"></i>
+        GPS: 33.3406°N, 44.4009°E · دقة 4م
+      </div>
+      <div class="check-row ch-ok">
+        <i class="ti ti-clock"></i>
+        توقيت: 2026-07-11 الساعة 14:32:07
+      </div>
+      <div class="check-row ch-save">
+        <i class="ti ti-fingerprint"></i>
+        بصمة رقمية: a3f9c2d1... (لمنع التلاعب)
+      </div>
+      <div class="check-row ch-wait">
+        <i class="ti ti-cloud-upload"></i>
+        الرفع: في انتظار الإنترنت — سيتم تلقائياً
+      </div>
+      <button class="act-btn btn-green" style="margin-top:10px" onclick="saveLocally()">
+        <i class="ti ti-device-floppy"></i> حفظ محلياً الآن
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- SAVED LOCALLY SUCCESS -->
+<div class="overlay" id="ov-saved">
+  <div class="mbox">
+    <div class="success-modal">
+      <div class="success-emoji">💾</div>
+      <div class="success-title">تم الحفظ محلياً!</div>
+      <div class="success-body">
+        الصورة والموقع محفوظان في جهازك.<br>
+        فور الاتصال بالإنترنت سيُرفع كل شيء<br>
+        ويُسجَّل السقي تلقائياً.
+      </div>
+      <button class="act-btn btn-blue" onclick="closeOverlay('ov-saved');switchView('queue')">
+        عرض سجل السقي
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PLANT DETAIL -->
+<div class="overlay" id="ov-detail">
+  <div class="mbox">
+    <button class="mbox-close" onclick="closeOverlay('ov-detail')"><i class="ti ti-x"></i></button>
+    <div class="detail-header">
+      <div class="detail-emoji" id="det-emoji">🌹</div>
+      <div class="detail-name" id="det-name">وردة دمشقية</div>
+      <div class="detail-type" id="det-type">زهور وورود</div>
+    </div>
+    <div id="det-rows"></div>
+    <div class="detail-actions">
+      <button class="act-btn btn-green" style="flex:1" onclick="closeOverlay('ov-detail');openWater()">
+        <i class="ti ti-droplet"></i> سقيها الآن
+      </button>
+      <button class="act-btn" style="flex:.5;background:var(--red-l);color:var(--red);border:1px solid #EF9A9A" onclick="closeOverlay('ov-detail');openReport(currentPlant)">
+        <i class="ti ti-flag"></i> بلّغ
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT -->
+<div class="overlay" id="ov-report">
+  <div class="mbox">
+    <button class="mbox-close" onclick="closeOverlay('ov-report')"><i class="ti ti-x"></i></button>
+    <div class="mbox-title">الإبلاغ عن مشكلة</div>
+    <div class="mbox-sub" id="report-sub">شجرة زيتون</div>
+    <label class="report-option"><input type="radio" name="rp"> النبتة في مكان خاص لا يمكن الوصول إليه</label>
+    <label class="report-option"><input type="radio" name="rp"> اسم النبتة مزيف أو مسيء</label>
+    <label class="report-option"><input type="radio" name="rp"> النبتة ماتت</label>
+    <label class="report-option"><input type="radio" name="rp"> موقع النبتة غير صحيح</label>
+    <label class="report-option"><input type="radio" name="rp"> لا يمكن الوصول إليها</label>
+    <button class="act-btn btn-red" style="margin-top:6px" onclick="submitReport()">إرسال البلاغ</button>
+  </div>
+</div>
+
+<!-- ADD SUCCESS -->
+<div class="overlay" id="ov-add-success">
+  <div class="mbox">
+    <div class="success-modal">
+      <div class="success-emoji">🌱</div>
+      <div class="success-title">تم نشر النبتة!</div>
+      <div class="success-body">
+        سيتم إشعار المستخدمين القريبين<br>
+        عند حاجتها للسقي.
+      </div>
+      <button class="act-btn btn-green" onclick="closeOverlay('ov-add-success');switchView('map')">
+        عرض على الخريطة
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT SUCCESS -->
+<div class="overlay" id="ov-report-success">
+  <div class="mbox">
+    <div class="success-modal">
+      <div class="success-emoji">✅</div>
+      <div class="success-title">تم إرسال البلاغ</div>
+      <div class="success-body">شكراً — سيتم مراجعة البلاغ من قِبل الفريق.</div>
+      <button class="act-btn btn-green" onclick="closeOverlay('ov-report-success')">حسناً</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* ── STATE ── */
+var isOnline = false;
+var currentPlant = '';
+var selectedInterval = '6h';
+var waterStep = 1;
+var plantCount = 12;
+var waterCount = 47;
+var queueCount = 1;
+
+/* ── NET ── */
+function toggleNet() {
+  isOnline = !isOnline;
+  var bar  = document.getElementById('net-bar');
+  var dot  = document.getElementById('net-dot');
+  var txt  = document.getElementById('net-txt');
+  var tbtn = document.querySelector('.net-toggle');
+  var sbtn = document.getElementById('sync-btn');
+  if (isOnline) {
+    bar.className = 'netbar online';
+    dot.className = 'net-dot on';
+    txt.textContent = 'متصل — الرفع التلقائي مفعّل';
+    tbtn.textContent = 'محاكاة قطع الاتصال';
+    sbtn.disabled = false;
+    sbtn.innerHTML = '<i class="ti ti-cloud-upload"></i> رفع الآن';
+  } else {
+    bar.className = 'netbar offline';
+    dot.className = 'net-dot off';
+    txt.textContent = 'بدون إنترنت — السقي يُحفظ محلياً';
+    tbtn.textContent = 'محاكاة اتصال';
+    sbtn.disabled = true;
+    sbtn.innerHTML = '<i class="ti ti-cloud-upload"></i> رفع عند الاتصال (غير متصل)';
+  }
+}
+
+/* ── VIEWS ── */
+function switchView(v) {
+  var views = ['map','add','queue','profile'];
+  views.forEach(function(x) {
+    var el = document.getElementById('view-'+x);
+    el.classList.remove('active');
+    if (x === 'map') el.style.display = 'none';
+    document.getElementById('nb-'+x).classList.remove('active');
+  });
+  var target = document.getElementById('view-'+v);
+  target.classList.add('active');
+  if (v === 'map') target.style.display = 'flex';
+  document.getElementById('nb-'+v).classList.add('active');
+}
+
+/* ── OVERLAYS ── */
+function openOverlay(id) { document.getElementById(id).classList.add('open'); }
+function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.overlay').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    if (e.target === el) closeOverlay(el.id);
+  });
+});
+
+/* ── NOTIFICATIONS ── */
+function openNotif() { openOverlay('ov-notif'); }
+
+/* ── PLANT DETAIL ── */
+var plants = {
+  ward: {
+    emoji:'🌹', name:'وردة دمشقية', type:'زهور وورود',
+    loc:'شارع المتنبي، بغداد', interval:'كل 6 ساعات',
+    last:'منذ ساعتين', status:'مسقية', owner:'أحمد محمد',
+    notes:'قريبة من عمود الإنارة الثالث'
+  },
+  rehan: {
+    emoji:'🌿', name:'ريحان', type:'أعشاب طبية',
+    loc:'زقاق 14، الكرخ', interval:'كل 4 ساعات',
+    last:'منذ ساعة', status:'مسقية', owner:'سارة علي',
+    notes:'في الحوض أمام البناية'
+  },
+  nakhlah: {
+    emoji:'🌴', name:'نخلة', type:'أشجار',
+    loc:'حديقة الأمة، بغداد', interval:'كل 12 ساعة',
+    last:'منذ 11 ساعة', status:'تحتاج سقي', owner:'محمد حسن',
+    notes:'النخلة الكبيرة عند المدخل الجنوبي'
+  },
+  zaytoon: {
+    emoji:'🫒', name:'شجرة زيتون', type:'أشجار مثمرة',
+    loc:'ساحة النهر، بغداد', interval:'كل 8 ساعات',
+    last:'منذ 11 ساعة (متأخر!)', status:'عاجل', owner:'علي كريم',
+    notes:'قرب النافورة المركزية'
+  }
+};
+
+function showDetail(id) {
+  currentPlant = id;
+  var p = plants[id];
+  document.getElementById('det-emoji').textContent = p.emoji;
+  document.getElementById('det-name').textContent  = p.name;
+  document.getElementById('det-type').textContent  = p.type;
+  document.getElementById('det-rows').innerHTML =
+    row('ti-map-pin', p.loc) +
+    row('ti-clock', 'يُسقى ' + p.interval) +
+    row('ti-droplet', 'آخر سقي: ' + p.last) +
+    row('ti-user', 'أضافها: ' + p.owner) +
+    row('ti-notes', p.notes);
+  openOverlay('ov-detail');
+}
+function row(icon, text) {
+  return '<div class="detail-row"><i class="ti ' + icon + '"></i>' + text + '</div>';
+}
+
+/* ── REPORT ── */
+function openReport(id) {
+  currentPlant = id;
+  var p = plants[id];
+  document.getElementById('report-sub').textContent = p ? p.name : id;
+  document.querySelectorAll('input[name="rp"]').forEach(function(r){ r.checked=false; });
+  openOverlay('ov-report');
+}
+function submitReport() {
+  closeOverlay('ov-report');
+  openOverlay('ov-report-success');
+}
+
+/* ── ADD PLANT ── */
+function selInt(btn, val) {
+  selectedInterval = val;
+  document.querySelectorAll('.int-btn').forEach(function(b){ b.classList.remove('sel'); });
+  btn.classList.add('sel');
+}
+var locSet = false;
+function pickLocation() {
+  var txt = document.getElementById('loc-txt');
+  var btn = document.getElementById('loc-btn');
+  txt.textContent = 'جاري تحديد الموقع...';
+  btn.style.opacity = '.6';
+  setTimeout(function(){
+    txt.textContent = '📍 بغداد — 33.3406°N, 44.4009°E (تم التحديد)';
+    btn.style.opacity = '1';
+    locSet = true;
+  }, 1200);
+}
+function submitPlant() {
+  var name = document.getElementById('inp-name').value.trim();
+  var type = document.getElementById('inp-type').value;
+  if (!name) { alert('أدخل اسم النبتة'); return; }
+  if (!type) { alert('اختر نوع النبتة'); return; }
+  plantCount++;
+  document.getElementById('stat-planted').textContent = plantCount;
+  document.getElementById('inp-name').value = '';
+  document.getElementById('inp-type').value = '';
+  document.getElementById('inp-notes').value = '';
+  document.getElementById('loc-txt').textContent = 'تحديد موقعي الحالي';
+  locSet = false;
+  openOverlay('ov-add-success');
+}
+
+/* ── WATER (offline) ── */
+function openWater() {
+  resetWater();
+  openOverlay('ov-water');
+}
+function resetWater() {
+  waterStep = 1;
+  show('photo-area'); hide('photo-prev'); hide('photo-saved'); hide('btn-next1');
+  hide('gps-ok'); hide('gps-note'); hide('btn-next2');
+  document.getElementById('gps-load').classList.remove('hidden');
+  ['sp1','sp2','sp3'].forEach(function(s){ document.getElementById(s).classList.remove('active'); });
+  document.getElementById('sp1').classList.add('active');
+  setStp(1);
+}
+function goStep(n) {
+  waterStep = n;
+  ['sp1','sp2','sp3'].forEach(function(s,i){
+    document.getElementById(s).classList.toggle('active', i===n-1);
+  });
+  setStp(n);
+  if (n === 2) startGPS();
+}
+function setStp(n) {
+  for (var i=1;i<=3;i++) {
+    var el = document.getElementById('stp'+i);
+    el.className = 'stp ' + (i<n?'done':i===n?'active':'idle');
+    el.querySelector('.stp-circle').textContent = i<n ? '✓' : i;
+  }
+}
+function takePhoto() {
+  hide('photo-area');
+  show('photo-prev');
+  setTimeout(function(){
+    show('photo-saved');
+    show('btn-next1');
+  }, 500);
+}
+function startGPS() {
+  setTimeout(function(){
+    hide('gps-load');
+    show('gps-ok');
+    show('gps-note');
+    show('btn-next2');
+  }, 1300);
+}
+function saveLocally() {
+  closeOverlay('ov-water');
+  resetWater();
+  waterCount++;
+  document.getElementById('stat-watered').textContent = waterCount;
+  // add to activity
+  var list = document.getElementById('activity-list');
+  var newItem = document.createElement('div');
+  newItem.className = 'act-item';
+  newItem.innerHTML = '<div class="act-icon">💧</div><div><div>سقيت شجرة زيتون</div><div class="act-sub">ساحة النهر · الآن</div></div>';
+  list.insertBefore(newItem, list.firstChild);
+  openOverlay('ov-saved');
+}
+
+/* ── SYNC ── */
+function doSync() {
+  if (!isOnline) return;
+  var prog  = document.getElementById('prog-1');
+  var pfill = document.getElementById('pfill-1');
+  var sbtn  = document.getElementById('sync-btn');
+  prog.style.display = 'block';
+  sbtn.disabled = true;
+  sbtn.innerHTML = '<i class="ti ti-loader"></i> جاري الرفع...';
+  var w = 0;
+  var iv = setInterval(function(){
+    w += 6;
+    pfill.style.width = Math.min(w,100) + '%';
+    if (w >= 100) {
+      clearInterval(iv);
+      document.getElementById('qcard-1').className = 'qcard synced';
+      document.getElementById('qst-1').className = 'qstatus done';
+      document.getElementById('qst-1').textContent = 'تم الرفع ✓';
+      document.getElementById('qbadge').className = 'qbadge done';
+      document.getElementById('qbadge').textContent = 'تم الرفع';
+      document.getElementById('nav-qbadge').classList.add('hidden');
+      sbtn.innerHTML = '<i class="ti ti-circle-check"></i> تم الرفع والتحقق بنجاح';
+      sbtn.style.background = 'var(--green)';
+      queueCount = 0;
+    }
+  }, 80);
+}
+
+/* ── HELPERS ── */
+function show(id){ document.getElementById(id).classList.remove('hidden'); }
+function hide(id){ document.getElementById(id).classList.add('hidden'); }
+</script>
+</body>
+</html>
