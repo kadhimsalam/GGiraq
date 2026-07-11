@@ -6,3 +6,24 @@ const supabase = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
+async function testConnection(){
+
+const {data,error}=await supabase
+
+.from("plants")
+
+.select("*");
+
+if(error){
+
+console.error(error);
+
+}else{
+
+console.log(data);
+
+}
+
+}
+
+testConnection();
